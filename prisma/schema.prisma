@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,4 +5,64 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  email     String @unique
+  password  String
+  firstName String
+  lastName  String
+
+  phoneNumber String?
+
+  @@map("users")
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name  String
+  items Item[]
+
+  // One-to-Many self-relation
+  parentId        Int?       @unique
+  parentCategory  Category?  @relation("CategoryTree", fields: [parentId], references: [id])
+  childCategories Category[] @relation("CategoryTree")
+  nestingLevel    Int        @default(1)
+
+  @@map("categories")
+}
+
+model Item {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name               String
+  description        String
+  image              String
+  price              Int
+  additionalFeatures AdditionalFeature[]
+
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+
+  @@map("items")
+}
+
+model AdditionalFeature {
+  id    Int    @id @default(autoincrement())
+  name  String
+  value String @default("-")
+
+  item   Item @relation(fields: [itemId], references: [id])
+  itemId Int
+
+  @@map("additional_features")
 }

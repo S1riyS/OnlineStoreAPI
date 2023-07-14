@@ -7,7 +7,7 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-<h2 align="center">OnlineStoreAPI</h2>
+<h3 align="center">OnlineStoreAPI</h3>
 
   <p align="center">
     <a href="https://github.com/S1riyS/OnlineStoreAPI">

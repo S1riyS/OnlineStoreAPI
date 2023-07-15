@@ -9,8 +9,8 @@ import {
 import { AuthService } from './auth.service';
 import { LoginDto, SignupDto } from './dto';
 import { Tokens } from './types';
-import { AtGuard, RtGuard } from './common/guards';
-import { CurrentUser, CurrentUserId } from './common/decorators';
+import { AtGuard, RtGuard } from '../common/guards';
+import { CurrentUser, CurrentUserId } from '../common/decorators';
 
 @Controller('auth')
 export class AuthController {

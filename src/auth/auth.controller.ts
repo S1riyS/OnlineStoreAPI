@@ -17,12 +17,12 @@ export class AuthController {
     return this.authService.loginLocal(dto);
   }
 
-  @Post('/logout')
+  @Post('logout')
   logout() {
     return this.authService.logout();
   }
 
-  @Post('/refresh')
+  @Post('refresh')
   refresh() {
     return this.authService.logout();
   }

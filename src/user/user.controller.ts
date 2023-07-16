@@ -1,9 +1,43 @@
-import { Controller, Get } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Put,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
+import { AtGuard } from '../common/guards';
+import { CurrentUserId } from '../common/decorators';
+import { UserService } from './user.service';
+import { NotFoundInterceptor } from '../common/interceptors';
+import { User } from '@prisma/client';
 
-@Controller('user')
+@Controller('users')
 export class UserController {
+  constructor(private userService: UserService) {}
+
+  @UseGuards(AtGuard)
+  @Get('me')
+  @UseInterceptors(new NotFoundInterceptor('User not found'))
+  getMe(@CurrentUserId() userId: number): Promise<User> {
+    return this.userService.getOne(userId);
+  }
+
+  @Get(':id')
+  @UseInterceptors(new NotFoundInterceptor('User not found'))
+  getOne(@Param('id', ParseIntPipe) userId: number): Promise<User> {
+    return this.userService.getOne(userId);
+  }
+
   @Get()
-  hello() {
-    return 'Hello';
+  getAll() {
+    return this.userService.getAll();
+  }
+
+  @UseGuards(AtGuard)
+  @Put()
+  editUser() {
+    console.log(0);
   }
 }

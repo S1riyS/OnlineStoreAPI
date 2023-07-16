@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   Param,
@@ -12,6 +13,7 @@ import { CurrentUserId } from '../common/decorators';
 import { UserService } from './user.service';
 import { NotFoundInterceptor } from '../common/interceptors';
 import { User } from '@prisma/client';
+import { EditUserDto } from './dto';
 
 @Controller('users')
 export class UserController {
@@ -36,8 +38,8 @@ export class UserController {
   }
 
   @UseGuards(AtGuard)
-  @Put()
-  editUser() {
+  @Put('me')
+  editUser(@CurrentUserId() userId: number, @Body() dto: EditUserDto) {
     console.log(0);
   }
 }

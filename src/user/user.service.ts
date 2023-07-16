@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { User } from '@prisma/client';
-import { CreateUserDto } from './dto';
+import { CreateUserDto, EditUserDto } from './dto';
 import { hashData } from '../common/utils';
 
 @Injectable()
@@ -25,9 +25,7 @@ export class UserService {
   }
 
   async getAll() {
-    const users = await this.prismaService.user.findMany();
-    console.log(typeof users);
-    return users;
+    return this.prismaService.user.findMany();
   }
 
   async create(dto: CreateUserDto): Promise<User> {
@@ -42,7 +40,14 @@ export class UserService {
     });
   }
 
-  async edit() {
-    console.log(0);
+  async edit(userId: number, dto: EditUserDto): Promise<User> {
+    return this.prismaService.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        ...dto,
+      },
+    });
   }
 }

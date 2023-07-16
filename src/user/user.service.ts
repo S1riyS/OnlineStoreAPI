@@ -8,7 +8,7 @@ import { hashData } from '../common/utils';
 export class UserService {
   constructor(private prismaService: PrismaService) {}
 
-  async getOne(userId: number): Promise<User> {
+  async getOneById(userId: number): Promise<User> {
     return this.prismaService.user.findUnique({
       where: {
         id: userId,

@@ -21,13 +21,13 @@ export class UserController {
   @Get('me')
   @UseInterceptors(new NotFoundInterceptor('User not found'))
   getMe(@CurrentUserId() userId: number): Promise<User> {
-    return this.userService.getOne(userId);
+    return this.userService.getOneById(userId);
   }
 
   @Get(':id')
   @UseInterceptors(new NotFoundInterceptor('User not found'))
   getOne(@Param('id', ParseIntPipe) userId: number): Promise<User> {
-    return this.userService.getOne(userId);
+    return this.userService.getOneById(userId);
   }
 
   @Get()

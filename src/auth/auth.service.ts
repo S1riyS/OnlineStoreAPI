@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { LoginDto } from './dto';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
@@ -17,6 +21,12 @@ export class AuthService {
   ) {}
 
   async signupLocal(dto: CreateUserDto): Promise<Tokens> {
+    const candidate = await this.userService.getOneByEmail(dto.email);
+
+    if (candidate) {
+      throw new BadRequestException('User with this email already exists');
+    }
+
     const newUser = await this.userService.create(dto);
 
     const tokens = await this.getTokens(newUser.id, newUser.email);

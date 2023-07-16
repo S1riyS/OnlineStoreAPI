@@ -5,6 +5,7 @@ import * as bcrypt from 'bcrypt';
 import { Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../user/dto';
+import { hashData } from '../common/utils';
 
 @Injectable()
 export class AuthService {
@@ -14,7 +15,7 @@ export class AuthService {
   ) {}
 
   async signupLocal(dto: CreateUserDto): Promise<Tokens> {
-    const hash = await this.hashData(dto.password);
+    const hash = await hashData(dto.password);
     const newUser = await this.prismaService.user.create({
       data: {
         email: dto.email,
@@ -80,7 +81,7 @@ export class AuthService {
   }
 
   async updateRtHash(userId: number, rt: string) {
-    const hash = await this.hashData(rt);
+    const hash = await hashData(rt);
     await this.prismaService.user.update({
       where: {
         id: userId,
@@ -89,10 +90,6 @@ export class AuthService {
         hashedRt: hash,
       },
     });
-  }
-
-  hashData(data: string): Promise<string> {
-    return bcrypt.hash(data, 10);
   }
 
   async getTokens(userId: number, email: string): Promise<Tokens> {

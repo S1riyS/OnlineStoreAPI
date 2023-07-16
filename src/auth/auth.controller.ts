@@ -7,10 +7,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDto, SignupDto } from './dto';
+import { LoginDto } from './dto';
 import { Tokens } from './types';
 import { AtGuard, RtGuard } from '../common/guards';
 import { CurrentUser, CurrentUserId } from '../common/decorators';
+import { CreateUserDto } from '../user/dto';
 
 @Controller('auth')
 export class AuthController {
@@ -18,7 +19,7 @@ export class AuthController {
 
   @Post('local/signup')
   @HttpCode(HttpStatus.CREATED)
-  signupLocal(@Body() dto: SignupDto): Promise<Tokens> {
+  signupLocal(@Body() dto: CreateUserDto): Promise<Tokens> {
     return this.authService.signupLocal(dto);
   }
 

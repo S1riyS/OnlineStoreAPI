@@ -49,6 +49,26 @@ This is in fact quite simple backend that can satisfy needs of almost any small 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## 💬 Contacts
+
+**[Ankudinov Kirill](https://github.com/S1riyS)**:
+
+* [![Vkontakte](https://img.shields.io/badge/-Vkontakte-090909?style=for-the-badge&logo=Vk&logoColor=4F7DB3)](https://vk.com/s1riys)
+* [![Email](https://img.shields.io/badge/-Email-090909?style=for-the-badge&logo=gmail)](mailto:kirill.ankudinov.94@mail.ru)
+* [![Discord](https://img.shields.io/badge/-Discord-090909?style=for-the-badge&logo=discord)](https://discordapp.com/users/380736129361772548/)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## 🙏🏻 Acknowledgments
+
+The following resources have helped me a lot throughout development of this project:
+
+* [NestJS + JWT guide](https://www.youtube.com/watch?v=COeLpQ3yXi0&t=732s)
+* [NestJS + Swagger guide](https://www.youtube.com/watch?v=dDeWWQWMM-Y&t=1590s)
+* [Decoration of README](https://github.com/othneildrew/Best-README-Template)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 *Remaining information will be added later*
 
 [test-assignment-link]: https://docs.google.com/document/d/1KZoi30pt2GOWEzohw2iO53GS0mlKMIDWLdmIXoCM3q0/edit?usp=sharing

@@ -8,18 +8,18 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 
 export class EditUserDto {
-  @ApiProperty()
+  @ApiProperty({ required: false, nullable: true })
   @IsEmail()
   @IsOptional()
   email?: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false, nullable: true })
   @IsString()
   @IsOptional()
   @IsNotEmpty()
   firstName?: string;
 
-  @ApiProperty()
+  @ApiProperty({ required: false, nullable: true })
   @IsString()
   @IsOptional()
   @IsNotEmpty()

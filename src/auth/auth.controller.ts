@@ -59,7 +59,7 @@ export class AuthController {
     return this.authService.logout(userId);
   }
 
-  @ApiOperation({ summary: 'Refreshes access and refresh tokens' })
+  @ApiOperation({ summary: 'Returns new access and refresh tokens' })
   @ApiOkResponse({ type: TokensType })
   @ApiUnauthorizedResponse({ description: 'User is unauthorized' })
   @UseGuards(RtGuard)

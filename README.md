@@ -1,4 +1,4 @@
-<a name="readme-top"></a>
+<div id="readme-top"></div>
 
 <!-- PROJECT LOGO -->
 <br />

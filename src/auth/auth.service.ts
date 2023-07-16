@@ -6,24 +6,18 @@ import { Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../user/dto';
 import { hashData } from '../common/utils';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {
   constructor(
+    private userService: UserService,
     private prismaService: PrismaService,
     private jwtService: JwtService,
   ) {}
 
   async signupLocal(dto: CreateUserDto): Promise<Tokens> {
-    const hash = await hashData(dto.password);
-    const newUser = await this.prismaService.user.create({
-      data: {
-        email: dto.email,
-        password: hash,
-        firstName: dto.firstName,
-        lastName: dto.lastName,
-      },
-    });
+    const newUser = await this.userService.create(dto);
 
     const tokens = await this.getTokens(newUser.id, newUser.email);
     await this.updateRtHash(newUser.id, tokens.refresh_token);

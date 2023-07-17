@@ -28,7 +28,7 @@ model Category {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  name  String
+  name  String @unique
   items Item[]
 
   // One-to-Many self-relation

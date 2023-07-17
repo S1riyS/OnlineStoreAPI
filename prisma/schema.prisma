@@ -32,7 +32,7 @@ model Category {
   items Item[]
 
   // One-to-Many self-relation
-  parentId        Int?       @unique
+  parentId        Int?
   parentCategory  Category?  @relation("CategoryTree", fields: [parentId], references: [id])
   childCategories Category[] @relation("CategoryTree")
   nestingLevel    Int        @default(1)

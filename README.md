@@ -46,6 +46,7 @@ This is in fact quite simple backend that can satisfy needs of almost any small 
 * [![NestJS][NestJS-logo]][NestJS-link]
 * [![Prisma][Prisma-logo]][Prisma-link]
 * [![Postgres][Postgres-logo]][Postgres-link]
+* [![Swagger][Swagger-logo]][Swagger-link]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -88,3 +89,7 @@ The following resources have helped me a lot throughout development of this proj
 [Postgres-logo]: https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white
 
 [Postgres-link]: https://www.postgresql.org/about/
+
+[Swagger-logo]: https://img.shields.io/badge/swagger-82e62d?style=for-the-badge&logo=swagger&logoColor=173647
+
+[Swagger-link]: https://swagger.io/

@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SecuritySchemeObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,14 +12,28 @@ async function bootstrap() {
     }),
   );
 
+  const JWTOptionsObject: SecuritySchemeObject = {
+    type: 'http',
+    scheme: 'bearer',
+    bearerFormat: 'JWT',
+    name: 'JWT',
+    description: 'Enter JWT token',
+    in: 'header',
+  };
+
   // Swagger configuration
   const swaggerConfig = new DocumentBuilder()
     .setTitle('OnlineStoreAPI')
     .setDescription('Simple backend for online stores')
     .setVersion('1.0.0')
+    .addBearerAuth(JWTOptionsObject, 'JWT-auth')
+    .addBearerAuth(JWTOptionsObject, 'JWT-refresh')
     .build();
+
   const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('/api/docs', app, document);
+  SwaggerModule.setup('/api/docs', app, document, {
+    customSiteTitle: 'OnlineStoreAPI documentation',
+  });
 
   await app.listen(3000);
 }

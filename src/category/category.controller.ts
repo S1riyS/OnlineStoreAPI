@@ -55,6 +55,14 @@ export class CategoryController {
     return this.categoryService.create(dto);
   }
 
+  @ApiOperation({ summary: 'Returns category with given ID' })
+  @ApiOkResponse({ type: CategoryEntity })
+  @ApiNotFoundResponse({ description: 'Category not found', type: ApiError })
+  @Get(':id')
+  getOneById(@Param('id', ParseIntPipe) categoryId: number) {
+    return this.categoryService.getOneByID(categoryId);
+  }
+
   @ApiOperation({ summary: 'Returns full tree of categories' })
   @ApiOkResponse({ type: [CategoryEntity] })
   @Get('tree')

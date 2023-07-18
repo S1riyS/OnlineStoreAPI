@@ -20,7 +20,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { CategoryEntity, CategoryWithChildrenEntity } from './category.entity';
+import { CategoryEntity } from './category.entity';
 import { ApiError } from '../common/types';
 import { AtGuard } from '../common/guards';
 
@@ -49,14 +49,14 @@ export class CategoryController {
   }
 
   @ApiOperation({ summary: 'Returns full tree of categories' })
-  @ApiOkResponse({ type: [CategoryWithChildrenEntity] })
+  @ApiOkResponse({ type: [CategoryEntity] })
   @Get('tree')
   getFullTree() {
     return this.categoryService.getFullTree();
   }
 
   @ApiOperation({ summary: 'Returns tree of category with given ID' })
-  @ApiOkResponse({ type: CategoryWithChildrenEntity })
+  @ApiOkResponse({ type: CategoryEntity })
   @Get('tree/:id')
   getTreeById(@Param('id', ParseIntPipe) categoryId: number) {
     return this.categoryService.getTreeById(categoryId);

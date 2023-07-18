@@ -19,11 +19,9 @@ export class CategoryEntity implements Category {
 
   @ApiProperty({ required: false, nullable: true, example: null })
   parentId: number;
-}
 
-export class CategoryWithChildrenEntity extends CategoryEntity {
   @ApiProperty({
-    type: [CategoryWithChildrenEntity],
+    type: [CategoryEntity],
     example: [
       {
         id: 2,
@@ -36,5 +34,5 @@ export class CategoryWithChildrenEntity extends CategoryEntity {
       },
     ],
   })
-  childCategories: [CategoryWithChildrenEntity];
+  childCategories: [CategoryEntity];
 }

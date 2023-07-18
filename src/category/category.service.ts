@@ -14,9 +14,6 @@ export class CategoryService {
         where: {
           id: dto.parentId,
         },
-        include: {
-          childCategories: true,
-        },
       });
 
       // Checking if parent category exists
@@ -45,6 +42,9 @@ export class CategoryService {
         name: dto.name,
         parentId: dto.parentId,
         nestingLevel: currentNestingLevel,
+      },
+      include: {
+        childCategories: true,
       },
     });
   }

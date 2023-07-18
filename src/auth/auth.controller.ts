@@ -21,6 +21,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { ApiError } from '../common/types';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -31,6 +32,7 @@ export class AuthController {
   @ApiCreatedResponse({ type: TokensType })
   @ApiBadRequestResponse({
     description: 'Email is already used or invalid input data',
+    type: ApiError,
   })
   @Post('local/signup')
   @HttpCode(HttpStatus.CREATED)
@@ -41,8 +43,8 @@ export class AuthController {
   @ApiOperation({ summary: 'Log in to the system' })
   @ApiOkResponse({ type: TokensType })
   @ApiBadRequestResponse({
-    status: 400,
     description: 'Invalid username/password supplied or invalid input data',
+    type: ApiError,
   })
   @Post('local/login')
   @HttpCode(HttpStatus.OK)
@@ -52,7 +54,10 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Current user logout' })
   @ApiOkResponse({ description: 'Logged out successfully' })
-  @ApiUnauthorizedResponse({ description: 'User is unauthorized' })
+  @ApiUnauthorizedResponse({
+    description: 'User is unauthorized',
+    type: ApiError,
+  })
   @ApiBearerAuth('JWT-auth')
   @UseGuards(AtGuard)
   @Post('logout')
@@ -63,7 +68,10 @@ export class AuthController {
 
   @ApiOperation({ summary: 'Returns new access and refresh tokens' })
   @ApiOkResponse({ type: TokensType })
-  @ApiUnauthorizedResponse({ description: 'User is unauthorized' })
+  @ApiUnauthorizedResponse({
+    description: 'User is unauthorized',
+    type: ApiError,
+  })
   @ApiBearerAuth('JWT-refresh')
   @UseGuards(RtGuard)
   @Post('refresh')

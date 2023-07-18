@@ -38,7 +38,10 @@ export class CategoryController {
       'Category with such name already exists',
     type: ApiError,
   })
-  @ApiUnauthorizedResponse({ description: 'User is unauthorized' })
+  @ApiUnauthorizedResponse({
+    description: 'User is unauthorized',
+    type: ApiError,
+  })
   @ApiBearerAuth('JWT-auth')
   @UseGuards(AtGuard)
   @Post()

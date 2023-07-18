@@ -22,6 +22,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { UserEntity } from './user.entity';
+import { ApiError } from '../common/types';
 
 @Controller('users')
 @ApiTags('Users')
@@ -30,8 +31,11 @@ export class UserController {
 
   @ApiOperation({ summary: 'Get current user' })
   @ApiOkResponse({ type: UserEntity })
-  @ApiUnauthorizedResponse({ description: 'User is unauthorized' })
-  @ApiNotFoundResponse({ description: 'User was not found' })
+  @ApiUnauthorizedResponse({
+    description: 'User is unauthorized',
+    type: ApiError,
+  })
+  @ApiNotFoundResponse({ description: 'User was not found', type: ApiError })
   @ApiBearerAuth('JWT-auth')
   @UseGuards(AtGuard)
   @Get('me')
@@ -42,7 +46,7 @@ export class UserController {
 
   @ApiOperation({ summary: 'Get current user by ID' })
   @ApiOkResponse({ type: UserEntity })
-  @ApiNotFoundResponse({ description: 'User was not found' })
+  @ApiNotFoundResponse({ description: 'User was not found', type: ApiError })
   @Get(':id')
   @UseInterceptors(new NotFoundInterceptor('User not found'))
   getOne(@Param('id', ParseIntPipe) userId: number) {
@@ -58,7 +62,10 @@ export class UserController {
 
   @ApiOperation({ summary: 'Edit current user' })
   @ApiOkResponse({ type: UserEntity })
-  @ApiUnauthorizedResponse({ description: 'User is unauthorized' })
+  @ApiUnauthorizedResponse({
+    description: 'User is unauthorized',
+    type: ApiError,
+  })
   @ApiBearerAuth('JWT-auth')
   @UseGuards(AtGuard)
   @Put('me')

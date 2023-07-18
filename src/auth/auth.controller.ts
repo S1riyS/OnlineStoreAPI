@@ -14,6 +14,7 @@ import { CurrentUser, CurrentUserId } from '../common/decorators';
 import { CreateUserDto } from '../user/dto';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
@@ -52,6 +53,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Current user logout' })
   @ApiOkResponse({ description: 'Logged out successfully' })
   @ApiUnauthorizedResponse({ description: 'User is unauthorized' })
+  @ApiBearerAuth('JWT-auth')
   @UseGuards(AtGuard)
   @Post('logout')
   @HttpCode(HttpStatus.OK)
@@ -62,6 +64,7 @@ export class AuthController {
   @ApiOperation({ summary: 'Returns new access and refresh tokens' })
   @ApiOkResponse({ type: TokensType })
   @ApiUnauthorizedResponse({ description: 'User is unauthorized' })
+  @ApiBearerAuth('JWT-refresh')
   @UseGuards(RtGuard)
   @Post('refresh')
   @HttpCode(HttpStatus.OK)

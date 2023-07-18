@@ -14,6 +14,7 @@ import { UserService } from './user.service';
 import { NotFoundInterceptor } from '../common/interceptors';
 import { EditUserDto } from './dto';
 import {
+  ApiBearerAuth,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -31,6 +32,7 @@ export class UserController {
   @ApiOkResponse({ type: UserEntity })
   @ApiUnauthorizedResponse({ description: 'User is unauthorized' })
   @ApiNotFoundResponse({ description: 'User was not found' })
+  @ApiBearerAuth('JWT-auth')
   @UseGuards(AtGuard)
   @Get('me')
   @UseInterceptors(new NotFoundInterceptor('User not found'))
@@ -57,6 +59,7 @@ export class UserController {
   @ApiOperation({ summary: 'Edit current user' })
   @ApiOkResponse({ type: UserEntity })
   @ApiUnauthorizedResponse({ description: 'User is unauthorized' })
+  @ApiBearerAuth('JWT-auth')
   @UseGuards(AtGuard)
   @Put('me')
   editUser(@CurrentUserId() userId: number, @Body() dto: EditUserDto) {

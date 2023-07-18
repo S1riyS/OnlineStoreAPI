@@ -15,6 +15,7 @@ import {
   ApiBadRequestResponse,
   ApiBearerAuth,
   ApiCreatedResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -33,13 +34,16 @@ export class CategoryController {
   @ApiCreatedResponse({ type: CategoryEntity })
   @ApiBadRequestResponse({
     description:
-      'Incorrect ID of parent category or ' +
       'Nesting level will be higher than 3 or ' +
       'Category with such name already exists',
     type: ApiError,
   })
   @ApiUnauthorizedResponse({
     description: 'User is unauthorized',
+    type: ApiError,
+  })
+  @ApiNotFoundResponse({
+    description: 'Incorrect ID of parent category',
     type: ApiError,
   })
   @ApiBearerAuth('JWT-auth')
@@ -60,6 +64,7 @@ export class CategoryController {
 
   @ApiOperation({ summary: 'Returns tree of category with given ID' })
   @ApiOkResponse({ type: CategoryEntity })
+  @ApiNotFoundResponse({ description: 'Category not found', type: ApiError })
   @Get('tree/:id')
   getTreeById(@Param('id', ParseIntPipe) categoryId: number) {
     return this.categoryService.getTreeById(categoryId);

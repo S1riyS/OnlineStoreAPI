@@ -37,7 +37,7 @@ model Category {
   childCategories Category[] @relation("CategoryTree")
   nestingLevel    Int        @default(1)
 
-  additionalProps AdditionalProps[]
+  additionalProps AdditionalProp[]
 
   @@map("categories")
 }
@@ -53,19 +53,32 @@ model Item {
   image       String
   price       Int
 
-  category   Category @relation(fields: [categoryId], references: [id])
-  categoryId Int
+  category        Category              @relation(fields: [categoryId], references: [id])
+  categoryId      Int
+  additionalProps ItemAdditionalProps[]
 
   @@map("items")
 }
 
-model AdditionalProps {
-  id    Int    @id @default(autoincrement())
-  name  String
-  value String @default("-")
+model AdditionalProp {
+  id   Int    @id @default(autoincrement())
+  name String
 
   category   Category @relation(fields: [categoryId], references: [id])
   categoryId Int
 
+  items ItemAdditionalProps[]
+
   @@map("additional_features")
+}
+
+model ItemAdditionalProps {
+  id    Int    @id @default(autoincrement())
+  value String
+
+  itemId Int
+  item   Item @relation(fields: [itemId], references: [id])
+
+  additionalPropId Int
+  additionalProp   AdditionalProp @relation(fields: [additionalPropId], references: [id])
 }

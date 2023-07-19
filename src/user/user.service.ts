@@ -1,7 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { exclude, PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto, EditUserDto } from './dto';
 import { hashData } from '../common/utils';
+import { Prisma } from '@prisma/client';
+
+const userSelectObject: Prisma.UserSelect = {
+  id: true,
+  email: true,
+  firstName: true,
+  lastName: true,
+  phoneNumber: true,
+  createdAt: true,
+  updatedAt: true,
+};
 
 @Injectable()
 export class UserService {
@@ -12,7 +23,7 @@ export class UserService {
       where: {
         id: userId,
       },
-      select: exclude('user', ['password', 'hashedRt']),
+      select: userSelectObject,
     });
   }
 
@@ -21,13 +32,13 @@ export class UserService {
       where: {
         email: email,
       },
-      select: exclude('user', ['password', 'hashedRt']),
+      select: userSelectObject,
     });
   }
 
   async getAll() {
     return this.prismaService.user.findMany({
-      select: exclude('user', ['password', 'hashedRt']),
+      select: userSelectObject,
     });
   }
 
@@ -40,7 +51,7 @@ export class UserService {
         firstName: dto.firstName,
         lastName: dto.lastName,
       },
-      select: exclude('user', ['password', 'hashedRt']),
+      select: userSelectObject,
     });
   }
 
@@ -52,7 +63,7 @@ export class UserService {
       data: {
         ...dto,
       },
-      select: exclude('user', ['password', 'hashedRt']),
+      select: userSelectObject,
     });
   }
 }

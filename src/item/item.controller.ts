@@ -11,9 +11,9 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ItemService } from './item.service';
-import { CreateItemDto } from './dto/create-item.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { NotFoundInterceptor } from '../common/interceptors';
+import { CreateItemDto } from './dto';
 
 @Controller('items')
 export class ItemController {

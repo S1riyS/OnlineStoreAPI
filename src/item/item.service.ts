@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { SlugService } from 'nestjs-slug';
-import { CreateItemDto } from './dto/create-item.dto';
 import { FilesService } from '../files/files.service';
+import { CreateItemDto } from './dto';
 
 @Injectable()
 export class ItemService {

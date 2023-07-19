@@ -5,6 +5,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ItemModule } from './item/item.module';
 import { CategoryModule } from './category/category.module';
 import { ConfigModule } from '@nestjs/config';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ConfigModule } from '@nestjs/config';
     AuthModule,
     ItemModule,
     CategoryModule,
+    FilesModule,
   ],
 })
 export class AppModule {}

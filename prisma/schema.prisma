@@ -37,6 +37,8 @@ model Category {
   childCategories Category[] @relation("CategoryTree")
   nestingLevel    Int        @default(1)
 
+  additionalProps AdditionalProps[]
+
   @@map("categories")
 }
 
@@ -45,12 +47,11 @@ model Item {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  name               String              @unique
-  slug               String              @unique
-  description        String
-  image              String
-  price              Int
-  additionalFeatures AdditionalFeature[]
+  name        String @unique
+  slug        String @unique
+  description String
+  image       String
+  price       Int
 
   category   Category @relation(fields: [categoryId], references: [id])
   categoryId Int
@@ -58,13 +59,13 @@ model Item {
   @@map("items")
 }
 
-model AdditionalFeature {
+model AdditionalProps {
   id    Int    @id @default(autoincrement())
   name  String
   value String @default("-")
 
-  item   Item @relation(fields: [itemId], references: [id])
-  itemId Int
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
 
   @@map("additional_features")
 }

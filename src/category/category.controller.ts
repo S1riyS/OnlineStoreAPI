@@ -22,10 +22,14 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { CategoryEntity } from './category.entity';
 import { ApiError } from '../common/types';
 import { AtGuard } from '../common/guards';
 import { NotFoundInterceptor } from '../common/interceptors';
+import {
+  CategoryTreeResponse,
+  CreateCategoryResponse,
+  GetOneResponse,
+} from './types';
 
 @Controller('category')
 @ApiTags('Category')
@@ -33,7 +37,7 @@ export class CategoryController {
   constructor(private categoryService: CategoryService) {}
 
   @ApiOperation({ summary: 'Creates new category' })
-  @ApiCreatedResponse({ type: CategoryEntity })
+  @ApiCreatedResponse({ type: CreateCategoryResponse })
   @ApiBadRequestResponse({
     description:
       'Nesting level will be higher than 3 or ' +
@@ -58,14 +62,14 @@ export class CategoryController {
   }
 
   @ApiOperation({ summary: 'Returns full tree of categories' })
-  @ApiOkResponse({ type: [CategoryEntity] })
+  @ApiOkResponse({ type: [CategoryTreeResponse] })
   @Get('tree')
   getFullTree() {
     return this.categoryService.getFullTree();
   }
 
   @ApiOperation({ summary: 'Returns tree of category with given ID' })
-  @ApiOkResponse({ type: CategoryEntity })
+  @ApiOkResponse({ type: CategoryTreeResponse })
   @ApiNotFoundResponse({ description: 'Category not found', type: ApiError })
   @Get('tree/:id')
   @UseInterceptors(new NotFoundInterceptor('Category not found'))
@@ -74,7 +78,7 @@ export class CategoryController {
   }
 
   @ApiOperation({ summary: 'Returns category with given ID' })
-  @ApiOkResponse({ type: CategoryEntity })
+  @ApiOkResponse({ type: GetOneResponse })
   @ApiNotFoundResponse({ description: 'Category not found', type: ApiError })
   @Get(':id')
   @UseInterceptors(new NotFoundInterceptor('Category not found'))

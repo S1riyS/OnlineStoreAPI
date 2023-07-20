@@ -19,9 +19,11 @@ import {
   ApiBadRequestResponse,
   ApiConsumes,
   ApiCreatedResponse,
+  ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiTags,
 } from '@nestjs/swagger';
 import {
   CreateItemResponse,
@@ -31,6 +33,7 @@ import {
 import { ApiError } from '../common/types';
 
 @Controller('items')
+@ApiTags('Items')
 export class ItemController {
   constructor(private itemService: ItemService) {}
 
@@ -50,7 +53,14 @@ export class ItemController {
     description: 'Category with given ID not found',
     type: ApiError,
   })
-  create(@Body() dto: CreateItemDto, @UploadedFile() image: any) {
+  @ApiInternalServerErrorResponse({
+    description: 'Error while writing file',
+    type: ApiError,
+  })
+  create(
+    @Body() dto: CreateItemDto,
+    @UploadedFile() image: Express.Multer.File,
+  ) {
     return this.itemService.create(dto, image);
   }
 

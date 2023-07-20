@@ -8,7 +8,17 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { AdditionalProp } from '../types';
+
+class AdditionalProp {
+  @IsNotEmpty()
+  @Type(() => Number)
+  @IsInt()
+  additionalPropId: number;
+
+  @IsNotEmpty()
+  @IsString()
+  value: string;
+}
 
 export class CreateItemDto {
   @IsNotEmpty()

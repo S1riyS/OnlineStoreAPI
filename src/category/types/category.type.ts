@@ -48,9 +48,11 @@ export class GetOneResponse extends CategoryWithChildren {
     type: [AdditionalProp],
     example: [
       {
+        id: 1,
         name: 'Weight',
       },
       {
+        id: 2,
         name: 'Length',
       },
     ],

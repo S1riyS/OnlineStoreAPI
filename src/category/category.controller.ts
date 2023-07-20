@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Post,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto';
@@ -24,6 +25,7 @@ import {
 import { CategoryEntity } from './category.entity';
 import { ApiError } from '../common/types';
 import { AtGuard } from '../common/guards';
+import { NotFoundInterceptor } from '../common/interceptors';
 
 @Controller('category')
 @ApiTags('Category')
@@ -66,6 +68,7 @@ export class CategoryController {
   @ApiOkResponse({ type: CategoryEntity })
   @ApiNotFoundResponse({ description: 'Category not found', type: ApiError })
   @Get('tree/:id')
+  @UseInterceptors(new NotFoundInterceptor('Category not found'))
   getTreeById(@Param('id', ParseIntPipe) categoryId: number) {
     return this.categoryService.getTreeById(categoryId);
   }
@@ -74,6 +77,7 @@ export class CategoryController {
   @ApiOkResponse({ type: CategoryEntity })
   @ApiNotFoundResponse({ description: 'Category not found', type: ApiError })
   @Get(':id')
+  @UseInterceptors(new NotFoundInterceptor('Category not found'))
   getOneById(@Param('id', ParseIntPipe) categoryId: number) {
     return this.categoryService.getOneByID(categoryId);
   }

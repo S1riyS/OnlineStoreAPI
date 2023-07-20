@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCategoryDto } from './dto';
 
@@ -14,10 +10,7 @@ export class CategoryService {
     let currentNestingLevel = 1;
 
     if (dto.parentId) {
-      const parentCategory = await this.getOneByID(
-        dto.parentId,
-        'Incorrect ID of parent category',
-      );
+      const parentCategory = await this.getOneByID(dto.parentId);
 
       // Checking if parent category exists
       if (!parentCategory)
@@ -57,17 +50,12 @@ export class CategoryService {
     });
   }
 
-  async getOneByID(categoryId: number, notFoundMessage = 'Category not found') {
-    const category = await this.prismaService.category.findUnique({
+  async getOneByID(categoryId: number) {
+    return this.prismaService.category.findUnique({
       where: {
         id: categoryId,
       },
     });
-
-    if (!category) {
-      throw new NotFoundException(notFoundMessage);
-    }
-    return category;
   }
 
   async getFullTree() {

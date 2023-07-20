@@ -11,12 +11,14 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../user/dto';
 import { hashData } from '../common/utils';
 import { UserService } from '../user/user.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UserService,
     private prismaService: PrismaService,
+    private config: ConfigService,
     private jwtService: JwtService,
   ) {}
 
@@ -103,7 +105,7 @@ export class AuthService {
         email: email,
       },
       {
-        secret: 'AT-STRATEGY-SECRET-KEY',
+        secret: this.config.get('ACCESS_TOKEN_SECRET'),
         expiresIn: 60 * 15,
       },
     );
@@ -114,7 +116,7 @@ export class AuthService {
         email: email,
       },
       {
-        secret: 'RT-STRATEGY-SECRET-KEY',
+        secret: this.config.get('REFRESH_TOKEN_SECRET'),
         expiresIn: 60 * 60 * 24 * 7,
       },
     );

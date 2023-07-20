@@ -2,13 +2,13 @@ import {
   IsArray,
   IsInt,
   IsNotEmpty,
+  IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { AdditionalProps } from '../types/additional-feature.type';
 import { ApiProperty } from '@nestjs/swagger';
-import { AdditionalProp } from '../../category/types';
+import { AdditionalProp } from '../types';
 
 export class CreateItemDto {
   @IsNotEmpty()
@@ -30,8 +30,9 @@ export class CreateItemDto {
   categoryId: number;
 
   @ApiProperty({ required: false, nullable: true })
+  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => AdditionalProp)
-  additionalProps: AdditionalProps[];
+  additionalProps: AdditionalProp[] = [];
 }

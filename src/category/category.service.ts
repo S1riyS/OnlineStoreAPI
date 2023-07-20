@@ -1,9 +1,14 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCategoryDto } from './dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class CategoryService {
+  private additionalPropsSelectObject: Prisma.AdditionalPropSelect = {
+    id: true,
+    name: true,
+  };
   constructor(private prismaService: PrismaService) {}
 
   async create(dto: CreateCategoryDto) {
@@ -54,6 +59,11 @@ export class CategoryService {
     return this.prismaService.category.findUnique({
       where: {
         id: categoryId,
+      },
+      include: {
+        additionalProps: {
+          select: this.additionalPropsSelectObject,
+        },
       },
     });
   }

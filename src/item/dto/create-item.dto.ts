@@ -1,10 +1,14 @@
-import { IsInt, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsInt,
+  IsNotEmpty,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import { Type } from 'class-transformer';
-
-class AdditionalFeature {
-  name: string;
-  value: string;
-}
+import { AdditionalProps } from '../types/additional-feature.type';
+import { ApiProperty } from '@nestjs/swagger';
+import { AdditionalProp } from '../../category/types';
 
 export class CreateItemDto {
   @IsNotEmpty()
@@ -16,17 +20,18 @@ export class CreateItemDto {
   description: string;
 
   @IsNotEmpty()
-  // @IsNumberString({})
   @Type(() => Number)
   @IsInt()
   price: number;
 
   @IsNotEmpty()
-  // @IsNumberString({})
   @Type(() => Number)
   @IsInt()
   categoryId: number;
 
-  @IsOptional()
-  additionalFeatures: AdditionalFeature[];
+  @ApiProperty({ required: false, nullable: true })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => AdditionalProp)
+  additionalProps: AdditionalProps[];
 }

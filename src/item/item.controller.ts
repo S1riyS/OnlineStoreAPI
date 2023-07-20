@@ -22,7 +22,6 @@ export class ItemController {
   @Post()
   @UseInterceptors(FileInterceptor('image'))
   create(@Body() dto: CreateItemDto, @UploadedFile() image: any) {
-    console.log(dto, image);
     return this.itemService.create(dto, image);
   }
 

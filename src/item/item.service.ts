@@ -7,9 +7,19 @@ import { PrismaService } from '../prisma/prisma.service';
 import { SlugService } from 'nestjs-slug';
 import { FilesService } from '../files/files.service';
 import { CreateItemDto } from './dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class ItemService {
+  private additionalPropsSelectObject: Prisma.ItemAdditionalPropsSelect = {
+    id: true,
+    additionalProp: {
+      select: {
+        name: true,
+      },
+    },
+    value: true,
+  };
   constructor(
     private prismaService: PrismaService,
     private fileService: FilesService,
@@ -52,8 +62,15 @@ export class ItemService {
         price: dto.price,
         image: fileName,
         categoryId: dto.categoryId,
-        additionalFeatures: {
-          create: dto.additionalFeatures,
+        additionalProps: {
+          createMany: {
+            data: dto.additionalProps,
+          },
+        },
+      },
+      include: {
+        additionalProps: {
+          select: this.additionalPropsSelectObject,
         },
       },
     });
@@ -64,6 +81,11 @@ export class ItemService {
       where: {
         slug: slug,
       },
+      include: {
+        additionalProps: {
+          select: this.additionalPropsSelectObject,
+        },
+      },
     });
   }
 
@@ -71,6 +93,11 @@ export class ItemService {
     return this.prismaService.item.findUnique({
       where: {
         id: itemId,
+      },
+      include: {
+        additionalProps: {
+          select: this.additionalPropsSelectObject,
+        },
       },
     });
   }

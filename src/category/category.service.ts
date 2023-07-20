@@ -45,6 +45,11 @@ export class CategoryService {
         name: dto.name,
         parentId: dto.parentId,
         nestingLevel: currentNestingLevel,
+        additionalProps: {
+          createMany: {
+            data: dto.additionalProps,
+          },
+        },
       },
       include: {
         childCategories: true,

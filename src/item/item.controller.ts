@@ -5,7 +5,6 @@ import {
   Param,
   ParseIntPipe,
   Post,
-  Put,
   Query,
   UploadedFile,
   UseInterceptors,
@@ -32,11 +31,12 @@ export class ItemController {
   }
 
   @Get(':id')
-  // @UseInterceptors(new NotFoundInterceptor('Item not found'))
   GetOneById(@Param('id', ParseIntPipe) itemId: number) {
     return this.itemService.getOneById(itemId);
   }
 
-  @Put(':id')
-  edit(@Param('id', ParseIntPipe) itemId: number) {}
+  @Get(':id/properties')
+  GetProperties(@Param('id', ParseIntPipe) itemId: number) {
+    return this.itemService.getProperties(itemId);
+  }
 }

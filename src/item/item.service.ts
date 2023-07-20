@@ -20,6 +20,7 @@ export class ItemService {
     },
     value: true,
   };
+
   constructor(
     private prismaService: PrismaService,
     private fileService: FilesService,
@@ -100,5 +101,54 @@ export class ItemService {
         },
       },
     });
+  }
+
+  async getProperties(itemId: number) {
+    // Getting properties of category to which item belongs and properties of item itself
+    const item = await this.prismaService.item.findUnique({
+      where: {
+        id: itemId,
+      },
+      select: {
+        category: {
+          select: {
+            additionalProps: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+        additionalProps: {
+          select: {
+            additionalPropId: true,
+            value: true,
+          },
+        },
+      },
+    });
+    const categoryProps = item.category.additionalProps;
+    const itemProps = item.additionalProps;
+
+    // Converting properties of item to dict
+    const itemPropsDict: { [id: string]: string } = {};
+    for (const itemProp of itemProps) {
+      itemPropsDict[itemProp.additionalPropId] = itemProp.value;
+    }
+
+    // Updating local version of category properties with values from dict of item properties
+    const itemPropsDictKeys = Object.keys(itemPropsDict);
+    categoryProps.map((property) => {
+      const propertyIdString = property.id.toString();
+
+      if (itemPropsDictKeys.includes(propertyIdString)) {
+        property['value'] = itemPropsDict[property.id];
+      } else {
+        property['value'] = null;
+      }
+    });
+
+    return categoryProps;
   }
 }

@@ -28,30 +28,33 @@ import { ApiError } from '../common/types';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @Post('local/signup')
+  @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Registration of new user' })
   @ApiCreatedResponse({ type: TokensType })
   @ApiBadRequestResponse({
     description: 'Email is already used or invalid input data',
     type: ApiError,
   })
-  @Post('local/signup')
-  @HttpCode(HttpStatus.CREATED)
   signupLocal(@Body() dto: CreateUserDto): Promise<Tokens> {
     return this.authService.signupLocal(dto);
   }
 
+  @Post('local/login')
+  @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Log in to the system' })
   @ApiOkResponse({ type: TokensType })
   @ApiBadRequestResponse({
     description: 'Invalid username/password supplied or invalid input data',
     type: ApiError,
   })
-  @Post('local/login')
-  @HttpCode(HttpStatus.OK)
   loginLocal(@Body() dto: LoginDto): Promise<Tokens> {
     return this.authService.loginLocal(dto);
   }
 
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AtGuard)
   @ApiOperation({ summary: 'Current user logout' })
   @ApiOkResponse({ description: 'Logged out successfully' })
   @ApiUnauthorizedResponse({
@@ -59,13 +62,13 @@ export class AuthController {
     type: ApiError,
   })
   @ApiBearerAuth('JWT-auth')
-  @UseGuards(AtGuard)
-  @Post('logout')
-  @HttpCode(HttpStatus.OK)
   logout(@CurrentUserId() userId: number) {
     return this.authService.logout(userId);
   }
 
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(RtGuard)
   @ApiOperation({ summary: 'Returns new access and refresh tokens' })
   @ApiOkResponse({ type: TokensType })
   @ApiUnauthorizedResponse({
@@ -73,9 +76,6 @@ export class AuthController {
     type: ApiError,
   })
   @ApiBearerAuth('JWT-refresh')
-  @UseGuards(RtGuard)
-  @Post('refresh')
-  @HttpCode(HttpStatus.OK)
   refresh(
     @CurrentUserId() userId: number,
     @CurrentUser('refreshToken') refreshToken: string,

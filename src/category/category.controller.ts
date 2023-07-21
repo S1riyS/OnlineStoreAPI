@@ -37,6 +37,9 @@ import {
 export class CategoryController {
   constructor(private categoryService: CategoryService) {}
 
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  @UseGuards(AtGuard)
   @ApiOperation({ summary: 'Creates new category' })
   @ApiCreatedResponse({ type: CreateCategoryResponse })
   @ApiBadRequestResponse({
@@ -54,35 +57,32 @@ export class CategoryController {
     type: ApiError,
   })
   @ApiBearerAuth('JWT-auth')
-  @UseGuards(AtGuard)
-  @Post()
-  @HttpCode(HttpStatus.CREATED)
   create(@Body() dto: CreateCategoryDto) {
     console.log(dto);
     return this.categoryService.create(dto);
   }
 
+  @Get('tree')
   @ApiOperation({ summary: 'Returns full tree of categories' })
   @ApiOkResponse({ type: [GetCategoryTreeResponse] })
-  @Get('tree')
   getFullTree() {
     return this.categoryService.getFullTree();
   }
 
+  @Get('tree/:id')
   @ApiOperation({ summary: 'Returns tree of category with given ID' })
   @ApiOkResponse({ type: GetCategoryTreeResponse })
   @ApiNotFoundResponse({ description: 'Category not found', type: ApiError })
-  @Get('tree/:id')
   @UseInterceptors(new NotFoundInterceptor('Category not found'))
   getTreeById(@Param('id', ParseIntPipe) categoryId: number) {
     return this.categoryService.getTreeById(categoryId);
   }
 
+  @Get(':id')
+  @UseInterceptors(new NotFoundInterceptor('Category not found'))
   @ApiOperation({ summary: 'Returns category with given ID' })
   @ApiOkResponse({ type: GetCategoryResponse })
   @ApiNotFoundResponse({ description: 'Category not found', type: ApiError })
-  @Get(':id')
-  @UseInterceptors(new NotFoundInterceptor('Category not found'))
   getOneById(@Param('id', ParseIntPipe) categoryId: number) {
     return this.categoryService.getOneByID(categoryId);
   }

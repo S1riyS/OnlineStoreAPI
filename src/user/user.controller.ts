@@ -29,6 +29,8 @@ import { ApiError } from '../common/types';
 export class UserController {
   constructor(private userService: UserService) {}
 
+  @Get('me')
+  @UseGuards(AtGuard)
   @ApiOperation({ summary: 'Get current user' })
   @ApiOkResponse({ type: UserEntity })
   @ApiUnauthorizedResponse({
@@ -37,29 +39,29 @@ export class UserController {
   })
   @ApiNotFoundResponse({ description: 'User was not found', type: ApiError })
   @ApiBearerAuth('JWT-auth')
-  @UseGuards(AtGuard)
-  @Get('me')
   @UseInterceptors(new NotFoundInterceptor('User not found'))
   getMe(@CurrentUserId() userId: number) {
     return this.userService.getOneById(userId);
   }
 
+  @Get(':id')
+  @UseInterceptors(new NotFoundInterceptor('User not found'))
   @ApiOperation({ summary: 'Get current user by ID' })
   @ApiOkResponse({ type: UserEntity })
   @ApiNotFoundResponse({ description: 'User was not found', type: ApiError })
-  @Get(':id')
-  @UseInterceptors(new NotFoundInterceptor('User not found'))
   getOne(@Param('id', ParseIntPipe) userId: number) {
     return this.userService.getOneById(userId);
   }
 
+  @Get()
   @ApiOperation({ summary: 'Get all users' })
   @ApiOkResponse({ type: [UserEntity] })
-  @Get()
   getAll() {
     return this.userService.getAll();
   }
 
+  @Put('me')
+  @UseGuards(AtGuard)
   @ApiOperation({ summary: 'Edit current user' })
   @ApiOkResponse({ type: UserEntity })
   @ApiUnauthorizedResponse({
@@ -67,8 +69,6 @@ export class UserController {
     type: ApiError,
   })
   @ApiBearerAuth('JWT-auth')
-  @UseGuards(AtGuard)
-  @Put('me')
   editUser(@CurrentUserId() userId: number, @Body() dto: EditUserDto) {
     return this.userService.edit(userId, dto);
   }

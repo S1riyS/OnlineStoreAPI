@@ -50,6 +50,26 @@ This is in fact quite simple backend that can satisfy needs of almost any small 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## 🗺️ Roadmap
+- [ ] API endpoints
+    - [x] Users
+    - [x] Auth
+    - [x] Categories
+    - [x] Items
+    - [ ] Basket
+    - [ ] Orders
+- [ ] Documentation
+    - [x] Users
+    - [x] Auth
+    - [x] Categories
+    - [x] Items
+    - [ ] Basket
+    - [ ] Orders
+- [ ] Deployment
+- [ ] Tests
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ## 💬 Contacts
 
 **[Ankudinov Kirill](https://github.com/S1riyS)**:

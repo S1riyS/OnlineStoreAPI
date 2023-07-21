@@ -89,6 +89,64 @@ export class CategoryService {
     return this.generateTree(category.id);
   }
 
+  async getProperties(categoryId: number) {
+    const categoryWithProperties = await this.prismaService.category.findUnique(
+      {
+        where: {
+          id: categoryId,
+        },
+        select: {
+          additionalProps: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      },
+    );
+    const categoryProps = categoryWithProperties.additionalProps;
+
+    const categoryPropsIDs: number[] = [];
+    for (const property of categoryProps) {
+      categoryPropsIDs.push(property.id);
+    }
+
+    const itemProps = await this.prismaService.itemAdditionalProps.groupBy({
+      by: ['additionalPropId', 'value'],
+      where: {
+        additionalPropId: {
+          in: categoryPropsIDs,
+        },
+      },
+      _count: {
+        value: true,
+      },
+    });
+
+    const itemPropsDict: {
+      [propId: string]: Array<{ value: string; counter: number }>;
+    } = {};
+    for (const property of itemProps) {
+      const data = {
+        value: property.value,
+        counter: property._count.value,
+      };
+
+      if (itemPropsDict[property.additionalPropId]) {
+        itemPropsDict[property.additionalPropId].push(data);
+      } else {
+        itemPropsDict[property.additionalPropId] = [data];
+      }
+    }
+
+    categoryProps.map((property) => {
+      property['values'] = itemPropsDict[property.id] || [];
+    });
+
+    return categoryProps;
+  }
+
   private async generateTree(categoryId: number, depth = 4) {
     const includeObject: any = {
       include: { childCategories: true },

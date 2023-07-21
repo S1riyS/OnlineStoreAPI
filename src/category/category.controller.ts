@@ -85,4 +85,9 @@ export class CategoryController {
   getOneById(@Param('id', ParseIntPipe) categoryId: number) {
     return this.categoryService.getOneByID(categoryId);
   }
+
+  @Get(':id/properties')
+  getProperties(@Param('id', ParseIntPipe) categoryId: number) {
+    return this.categoryService.getProperties(categoryId);
+  }
 }

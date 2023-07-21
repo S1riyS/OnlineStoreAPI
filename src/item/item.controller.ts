@@ -9,6 +9,7 @@ import {
   Post,
   Query,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ItemService } from './item.service';
@@ -17,6 +18,7 @@ import { NotFoundInterceptor } from '../common/interceptors';
 import { CreateItemDto } from './dto';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiConsumes,
   ApiCreatedResponse,
   ApiInternalServerErrorResponse,
@@ -24,6 +26,7 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import {
   CreateItemResponse,
@@ -31,6 +34,7 @@ import {
   PropertiesResponse,
 } from './types';
 import { ApiError } from '../common/types';
+import { AtGuard } from '../common/guards';
 
 @Controller('items')
 @ApiTags('Items')
@@ -39,10 +43,15 @@ export class ItemController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
+  @UseGuards(AtGuard)
   @UseInterceptors(FileInterceptor('image'))
   @ApiOperation({ summary: 'Creates new item' })
   @ApiConsumes('multipart/form-data')
   @ApiCreatedResponse({ type: CreateItemResponse })
+  @ApiUnauthorizedResponse({
+    description: 'User is unauthorized',
+    type: ApiError,
+  })
   @ApiBadRequestResponse({
     description:
       'Item with this name already exists or ' +
@@ -57,6 +66,7 @@ export class ItemController {
     description: 'Error while writing file',
     type: ApiError,
   })
+  @ApiBearerAuth('JWT-auth')
   create(
     @Body() dto: CreateItemDto,
     @UploadedFile() image: Express.Multer.File,

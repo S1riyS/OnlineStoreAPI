@@ -8,7 +8,12 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { AdditionalProp } from '../types';
+
+class AdditionalProp {
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+}
 
 export class CreateCategoryDto {
   @ApiProperty()

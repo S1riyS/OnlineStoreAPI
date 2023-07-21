@@ -26,12 +26,13 @@ import { ApiError } from '../common/types';
 import { AtGuard } from '../common/guards';
 import { NotFoundInterceptor } from '../common/interceptors';
 import {
-  CategoryTreeResponse,
   CreateCategoryResponse,
-  GetOneResponse,
+  GetCategoryPropsResponse,
+  GetCategoryResponse,
+  GetCategoryTreeResponse,
 } from './types';
 
-@Controller('category')
+@Controller('categories')
 @ApiTags('Category')
 export class CategoryController {
   constructor(private categoryService: CategoryService) {}
@@ -62,14 +63,14 @@ export class CategoryController {
   }
 
   @ApiOperation({ summary: 'Returns full tree of categories' })
-  @ApiOkResponse({ type: [CategoryTreeResponse] })
+  @ApiOkResponse({ type: [GetCategoryTreeResponse] })
   @Get('tree')
   getFullTree() {
     return this.categoryService.getFullTree();
   }
 
   @ApiOperation({ summary: 'Returns tree of category with given ID' })
-  @ApiOkResponse({ type: CategoryTreeResponse })
+  @ApiOkResponse({ type: GetCategoryTreeResponse })
   @ApiNotFoundResponse({ description: 'Category not found', type: ApiError })
   @Get('tree/:id')
   @UseInterceptors(new NotFoundInterceptor('Category not found'))
@@ -78,7 +79,7 @@ export class CategoryController {
   }
 
   @ApiOperation({ summary: 'Returns category with given ID' })
-  @ApiOkResponse({ type: GetOneResponse })
+  @ApiOkResponse({ type: GetCategoryResponse })
   @ApiNotFoundResponse({ description: 'Category not found', type: ApiError })
   @Get(':id')
   @UseInterceptors(new NotFoundInterceptor('Category not found'))
@@ -87,6 +88,9 @@ export class CategoryController {
   }
 
   @Get(':id/properties')
+  @ApiOperation({ summary: 'Returns properties of category with given ID' })
+  @ApiOkResponse({ type: [GetCategoryPropsResponse] })
+  @ApiNotFoundResponse({ description: 'Category not found', type: ApiError })
   getProperties(@Param('id', ParseIntPipe) categoryId: number) {
     return this.categoryService.getProperties(categoryId);
   }

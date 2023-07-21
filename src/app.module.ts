@@ -6,12 +6,17 @@ import { ItemModule } from './item/item.module';
 import { CategoryModule } from './category/category.module';
 import { ConfigModule } from '@nestjs/config';
 import { FilesModule } from './files/files.module';
+import * as path from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       expandVariables: true,
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: path.resolve(__dirname, 'static'),
     }),
     PrismaModule,
     UserModule,

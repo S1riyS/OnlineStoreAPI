@@ -64,11 +64,6 @@ export class CategoryService {
       where: {
         id: categoryId,
       },
-      include: {
-        additionalProps: {
-          select: this.additionalPropsSelectObject,
-        },
-      },
     });
   }
 

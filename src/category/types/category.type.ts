@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { AdditionalProp } from './additional-prop.type';
+import { GetItemResponse } from '../../item/types';
 
 class Category {
-  @ApiProperty({ example: 1 })
+  @ApiProperty({ example: 2 })
   id: number;
 
   @ApiProperty()
@@ -14,14 +14,16 @@ class Category {
   @ApiProperty({ example: 'Electronics' })
   name: string;
 
-  @ApiProperty({ example: 1 })
+  @ApiProperty({ example: 2 })
   nestingLevel: number;
 
-  @ApiProperty({ required: false, nullable: true, example: null })
-  parentId: number;
+  @ApiProperty({ required: false, nullable: true, example: 1 })
+  parentId: 1;
 }
 
-class CategoryWithChildren extends Category {
+export class CreateCategoryResponse extends Category {}
+
+export class GetCategoryTreeResponse extends Category {
   @ApiProperty({
     type: [Category],
     example: [
@@ -36,26 +38,10 @@ class CategoryWithChildren extends Category {
       },
     ],
   })
-  childCategories: [Category];
+  childCategories: Category[];
 }
 
-export class CreateCategoryResponse extends CategoryWithChildren {}
-
-export class CategoryTreeResponse extends CategoryWithChildren {}
-
-export class GetOneResponse extends CategoryWithChildren {
-  @ApiProperty({
-    type: [AdditionalProp],
-    example: [
-      {
-        id: 1,
-        name: 'Weight',
-      },
-      {
-        id: 2,
-        name: 'Length',
-      },
-    ],
-  })
-  additionalProps: [AdditionalProp];
+export class GetCategoryResponse extends Category {
+  @ApiProperty({ type: [GetItemResponse] })
+  items: GetItemResponse[];
 }

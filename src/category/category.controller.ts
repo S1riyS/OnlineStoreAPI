@@ -33,7 +33,7 @@ import {
 } from './types';
 
 @Controller('categories')
-@ApiTags('Category')
+@ApiTags('Categories')
 export class CategoryController {
   constructor(private categoryService: CategoryService) {}
 

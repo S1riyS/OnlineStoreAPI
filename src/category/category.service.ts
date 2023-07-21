@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCategoryDto } from './dto';
 import { Prisma } from '@prisma/client';
@@ -103,6 +107,9 @@ export class CategoryService {
         },
       },
     );
+    if (!categoryWithProperties) {
+      throw new NotFoundException('Category not found');
+    }
     const categoryProps = categoryWithProperties.additionalProps;
 
     // Extracting IDs of properties

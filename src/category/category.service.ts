@@ -90,6 +90,7 @@ export class CategoryService {
   }
 
   async getProperties(categoryId: number) {
+    // Getting all properties of category
     const categoryWithProperties = await this.prismaService.category.findUnique(
       {
         where: {
@@ -97,22 +98,21 @@ export class CategoryService {
         },
         select: {
           additionalProps: {
-            select: {
-              id: true,
-              name: true,
-            },
+            select: this.additionalPropsSelectObject,
           },
         },
       },
     );
     const categoryProps = categoryWithProperties.additionalProps;
 
+    // Extracting IDs of properties
     const categoryPropsIDs: number[] = [];
     for (const property of categoryProps) {
       categoryPropsIDs.push(property.id);
     }
 
-    const itemProps = await this.prismaService.itemAdditionalProps.groupBy({
+    // Getting all existing values and their quantity (from items of given category)
+    const itemsProps = await this.prismaService.itemAdditionalProps.groupBy({
       by: ['additionalPropId', 'value'],
       where: {
         additionalPropId: {
@@ -124,24 +124,28 @@ export class CategoryService {
       },
     });
 
-    const itemPropsDict: {
+    // Turning the received data into a dictionary
+    const itemsPropsDict: {
       [propId: string]: Array<{ value: string; counter: number }>;
     } = {};
-    for (const property of itemProps) {
+    for (const property of itemsProps) {
       const data = {
         value: property.value,
         counter: property._count.value,
       };
 
-      if (itemPropsDict[property.additionalPropId]) {
-        itemPropsDict[property.additionalPropId].push(data);
+      if (itemsPropsDict[property.additionalPropId]) {
+        itemsPropsDict[property.additionalPropId].push(data);
       } else {
-        itemPropsDict[property.additionalPropId] = [data];
+        itemsPropsDict[property.additionalPropId] = [data];
       }
     }
 
+    // Updating properties of category with data from `itemsPropsDict`
+    // e.g. {id: 1, name: 'Width'} -> {id: 1, name: 'Weight', values: [{value: '5 kg', counter: 3}]}
+    // Thus, in this category there are 3 items weighing 5 kilograms each
     categoryProps.map((property) => {
-      property['values'] = itemPropsDict[property.id] || [];
+      property['values'] = itemsPropsDict[property.id] || [];
     });
 
     return categoryProps;

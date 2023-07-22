@@ -104,8 +104,9 @@ model CartItems {
   cartId Int
   cart   Cart @relation(fields: [cartId], references: [id])
 
-  itemId Int
-  item   Item @relation(fields: [itemId], references: [id])
+  itemId  Int
+  item    Item @relation(fields: [itemId], references: [id])
+  counter Int // Quantity of items
 
   @@map("cart_items")
 }

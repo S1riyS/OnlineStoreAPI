@@ -108,7 +108,7 @@ export class CartService {
     return this.getOne(cartId);
   }
 
-  @Cron(CronExpression.EVERY_30_SECONDS)
+  @Cron(CronExpression.EVERY_DAY_AT_4AM)
   async deleteUnusedUnauthorizedCarts() {
     const now = +new Date();
     const twoWeeks = 1000 * 60 * 60 * 24 * 7 * 2;

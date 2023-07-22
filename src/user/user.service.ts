@@ -50,6 +50,9 @@ export class UserService {
         password: hashedPassword,
         firstName: dto.firstName,
         lastName: dto.lastName,
+        cart: {
+          create: {},
+        },
       },
       select: userSelectObject,
     });

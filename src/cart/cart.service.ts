@@ -6,6 +6,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { AddCartItemDto, UpdateCartItemDto } from './dto';
 import { simplifiedItemSelectObject } from '../common/constants';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class CartService {
@@ -29,7 +30,7 @@ export class CartService {
   }
 
   async getOne(cartId: number) {
-    return this.prismaService.cart.findUnique({
+    const cart = await this.prismaService.cart.findUnique({
       where: {
         id: cartId,
       },
@@ -44,6 +45,16 @@ export class CartService {
         },
       },
     });
+
+    const now = +new Date();
+    const lastUpdateTime = +cart.updatedAt;
+    const oneHour = 1000 * 60 * 60;
+
+    console.log(new Date(lastUpdateTime));
+    console.log(new Date(now));
+    console.log(now - oneHour, lastUpdateTime);
+
+    return cart;
   }
 
   async addItem(cartId: number, dto: AddCartItemDto) {
@@ -95,6 +106,22 @@ export class CartService {
       });
     }
     return this.getOne(cartId);
+  }
+
+  @Cron(CronExpression.EVERY_30_SECONDS)
+  async deleteUnusedUnauthorizedCarts() {
+    const now = +new Date();
+    const twoWeeks = 1000 * 60 * 60 * 24 * 7 * 2;
+    //              milliseconds, seconds, minutes, hours, days, weeks
+
+    await this.prismaService.cart.deleteMany({
+      where: {
+        updatedAt: {
+          lte: new Date(now - twoWeeks),
+        },
+        userId: null,
+      },
+    });
   }
 
   private async checkItemAndCartExistence(

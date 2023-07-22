@@ -9,6 +9,7 @@ import { FilesModule } from './files/files.module';
 import * as path from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { CartModule } from './cart/cart.module';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { CartModule } from './cart/cart.module';
     ServeStaticModule.forRoot({
       rootPath: path.resolve(__dirname, 'static'),
     }),
+    ScheduleModule.forRoot(),
     PrismaModule,
     UserModule,
     AuthModule,

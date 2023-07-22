@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty } from 'class-validator';
+import { IsInt, IsNotEmpty, IsPositive } from 'class-validator';
 
 export class AddCartItem {
   @IsNotEmpty()
@@ -7,7 +7,16 @@ export class AddCartItem {
 
   @IsNotEmpty()
   @IsInt()
+  @IsPositive()
   counter: number;
 }
 
-export class UpdateCartItemDto extends AddCartItem {}
+export class UpdateCartItemDto {
+  @IsNotEmpty()
+  @IsInt()
+  itemId: number;
+
+  @IsNotEmpty()
+  @IsInt()
+  counter: number;
+}

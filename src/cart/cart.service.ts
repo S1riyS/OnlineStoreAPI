@@ -39,7 +39,7 @@ export class CartService {
   }
 
   async addItem(cartId: number, dto: AddCartItem) {
-    await this.checkItemAndCartExistence(cartId, dto);
+    await this.checkItemAndCartExistence(cartId, dto.itemId);
 
     const isItemAlreadyInCart = !!(await this.prismaService.cartItems.findFirst(
       {
@@ -64,7 +64,7 @@ export class CartService {
   }
 
   async updateItem(cartId: number, dto: UpdateCartItemDto) {
-    await this.checkItemAndCartExistence(cartId, dto);
+    await this.checkItemAndCartExistence(cartId, dto.itemId);
 
     if (dto.counter > 0) {
       // Updating counter of item
@@ -91,11 +91,11 @@ export class CartService {
 
   private async checkItemAndCartExistence(
     cartId: number,
-    dto: AddCartItem | UpdateCartItemDto,
+    itemId: number,
   ): Promise<void> {
     const isItemExist = !!(await this.prismaService.item.findFirst({
       where: {
-        id: dto.itemId,
+        id: itemId,
       },
     }));
     if (!isItemExist) {

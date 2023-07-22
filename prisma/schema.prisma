@@ -17,8 +17,9 @@ model User {
   firstName   String
   lastName    String
   phoneNumber String?
+  hashedRt    String? // Hashed refresh token
 
-  hashedRt String?
+  cart Cart?
 
   @@map("users")
 }
@@ -53,9 +54,11 @@ model Item {
   image       String
   price       Int
 
-  category        Category              @relation(fields: [categoryId], references: [id])
-  categoryId      Int
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId Int
+
   additionalProps ItemAdditionalProps[]
+  carts           CartItems[]
 
   @@map("items")
 }
@@ -81,4 +84,28 @@ model ItemAdditionalProps {
 
   additionalPropId Int
   additionalProp   AdditionalProp @relation(fields: [additionalPropId], references: [id])
+}
+
+model Cart {
+  id        Int      @id @default(autoincrement())
+  updatedAt DateTime @updatedAt
+
+  userId Int?  @unique
+  user   User? @relation(fields: [userId], references: [id])
+
+  items CartItems[]
+
+  @@map("carts")
+}
+
+model CartItems {
+  id Int @id @default(autoincrement())
+
+  cartId Int
+  cart   Cart @relation(fields: [cartId], references: [id])
+
+  itemId Int
+  item   Item @relation(fields: [itemId], references: [id])
+
+  @@map("cart_items")
 }

@@ -8,6 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 import { FilesModule } from './files/files.module';
 import * as path from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { CartModule } from './cart/cart.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     ItemModule,
     CategoryModule,
     FilesModule,
+    CartModule,
   ],
 })
 export class AppModule {}

@@ -5,7 +5,7 @@ class CartItem {
   @ApiProperty()
   item: GetItemSimplifiedResponse;
 
-  @ApiProperty()
+  @ApiProperty({ example: 2 })
   counter: number;
 }
 

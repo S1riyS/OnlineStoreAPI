@@ -1,0 +1,1103 @@
+openapi: 3.0.0
+paths:
+  /users/me:
+    get:
+      operationId: UserController_getMe
+      summary: Get current user
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserEntity"
+        "401":
+          description: User is unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: User was not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      tags: &a1
+        - Users
+      security:
+        - JWT-auth: []
+    put:
+      operationId: UserController_editUser
+      summary: Edit current user
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EditUserDto"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserEntity"
+        "401":
+          description: User is unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      tags: *a1
+      security:
+        - JWT-auth: []
+  "/users/{id}":
+    get:
+      operationId: UserController_getOne
+      summary: Get current user by ID
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserEntity"
+        "404":
+          description: User was not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      tags: *a1
+  /users:
+    get:
+      operationId: UserController_getAll
+      summary: Get all users
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserEntity"
+      tags: *a1
+  /auth/local/signup:
+    post:
+      operationId: AuthController_signupLocal
+      summary: Registration of new user
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserDto"
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokensType"
+        "400":
+          description: Email is already used or invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      tags: &a2
+        - Auth
+  /auth/local/login:
+    post:
+      operationId: AuthController_loginLocal
+      summary: Log in to the system
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginDto"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokensType"
+        "400":
+          description: Invalid username/password supplied or invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      tags: *a2
+  /auth/logout:
+    post:
+      operationId: AuthController_logout
+      summary: Current user logout
+      parameters: []
+      responses:
+        "200":
+          description: Logged out successfully
+        "401":
+          description: User is unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      tags: *a2
+      security:
+        - JWT-auth: []
+  /auth/refresh:
+    post:
+      operationId: AuthController_refresh
+      summary: Returns new access and refresh tokens
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokensType"
+        "401":
+          description: User is unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      tags: *a2
+      security:
+        - JWT-refresh: []
+  /items:
+    post:
+      operationId: ItemController_create
+      summary: Creates new item
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/CreateItemDto"
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateItemResponse"
+        "400":
+          description: Item with this name already exists or Nesting level of category is
+            lower than 2
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: User is unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Category with given ID not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "500":
+          description: Error while writing file
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      tags: &a3
+        - Items
+      security:
+        - JWT-auth: []
+  /items/search:
+    get:
+      operationId: ItemController_getOneBySlug
+      summary: Finds item with given parameters (at the moment only search by slug is
+        implemented)
+      parameters:
+        - name: slug
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetItemResponse"
+        "404":
+          description: Item not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      tags: *a3
+  "/items/{id}":
+    get:
+      operationId: ItemController_getOneById
+      summary: Finds item with given ID
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetItemResponse"
+        "404":
+          description: Item not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      tags: *a3
+  "/items/{id}/properties":
+    get:
+      operationId: ItemController_getProperties
+      summary: Returns properties of item with given ID
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PropertiesResponse"
+        "404":
+          description: Item not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      tags: *a3
+  /categories:
+    post:
+      operationId: CategoryController_create
+      summary: Creates new category
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCategoryDto"
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateCategoryResponse"
+        "400":
+          description: Nesting level will be higher than 3 or Category with such name
+            already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: User is unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Incorrect ID of parent category
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      tags: &a4
+        - Categories
+      security:
+        - JWT-auth: []
+  /categories/tree:
+    get:
+      operationId: CategoryController_getFullTree
+      summary: Returns full tree of categories
+      parameters: []
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GetCategoryTreeResponse"
+      tags: *a4
+  "/categories/tree/{id}":
+    get:
+      operationId: CategoryController_getTreeById
+      summary: Returns tree of category with given ID
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetCategoryTreeResponse"
+        "404":
+          description: Category not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      tags: *a4
+  "/categories/{id}":
+    get:
+      operationId: CategoryController_getOneById
+      summary: Returns category with given ID
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetCategoryResponse"
+        "404":
+          description: Category not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      tags: *a4
+  "/categories/{id}/properties":
+    get:
+      operationId: CategoryController_getProperties
+      summary: Returns properties of category with given ID
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GetCategoryPropsResponse"
+        "404":
+          description: Category not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      tags: *a4
+  /carts/unauthorized:
+    post:
+      operationId: CartController_createUnauthorized
+      summary: Creates cart for unauthorized user
+      parameters: []
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateCartResponse"
+      tags: &a5
+        - Carts
+  "/carts/unauthorized/{id}":
+    delete:
+      operationId: CartController_deleteUnauthorized
+      summary: Deletes cart (of unauthorized users only)
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "200":
+          description: ""
+      tags: *a5
+  "/carts/{id}":
+    get:
+      operationId: CartController_getOne
+      summary: Returns cart with given ID
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetCartResponse"
+        "404":
+          description: Category not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      tags: *a5
+    post:
+      operationId: CartController_addItem
+      summary: Adds item to cart with given ID
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddCartItemDto"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddCartItemResponse"
+        "400":
+          description: This item is already in the cart
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Cart of item not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      tags: *a5
+    put:
+      operationId: CartController_updateItem
+      summary: Updates content of the cart (increments counter or deletes item if
+        counter is less than 1)
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateCartItemDto"
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateCartItemResponse"
+        "404":
+          description: Cart of item not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+      tags: *a5
+info:
+  title: OnlineStoreAPI
+  description: Simple backend for online stores
+  version: 1.0.0
+  contact: {}
+tags: []
+servers: []
+components:
+  securitySchemes:
+    JWT-auth:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+      name: JWT
+      description: Enter JWT token
+      in: header
+    JWT-refresh:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+      name: JWT
+      description: Enter JWT token
+      in: header
+  schemas:
+    UserEntity:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        email:
+          type: string
+          example: test@gmail.com
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        phoneNumber:
+          type: string
+          nullable: true
+          example: "+447911123456"
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+        - id
+        - email
+        - firstName
+        - lastName
+        - createdAt
+        - updatedAt
+    ApiError:
+      type: object
+      properties:
+        statusCode:
+          type: number
+          example: 400
+        error:
+          type: string
+          example: Bad Request
+        message:
+          type: string
+          example: Message of this error
+          nullable: true
+      required:
+        - statusCode
+        - error
+    EditUserDto:
+      type: object
+      properties:
+        email:
+          type: string
+          nullable: true
+        firstName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        phoneNumber:
+          type: string
+          nullable: true
+    CreateUserDto:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+      required:
+        - email
+        - password
+        - firstName
+        - lastName
+    TokensType:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWI...
+        refresh_token:
+          type: string
+          example: TA5MjQwLCJleHAiOjE2OTAxMTQwNDB9.lrZ6vxmbuMQW...
+      required:
+        - access_token
+        - refresh_token
+    LoginDto:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - password
+    CreateItemDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: AMD Ryzen 5 5600X BOX
+        description:
+          type: string
+        price:
+          type: number
+          example: 15999
+        image:
+          type: string
+          format: binary
+        categoryId:
+          type: number
+          example: 2
+        additionalProps:
+          nullable: true
+          type: array
+          items:
+            type: string
+      required:
+        - name
+        - description
+        - price
+        - image
+        - categoryId
+    CreateItemResponse:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        name:
+          type: string
+          example: AMD Ryzen 5 5600X BOX
+        image:
+          type: string
+          example: 9b77bf06-8e65-4787-b77e-9146a81c4bca.jpg
+        price:
+          type: number
+          example: 15999
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        slug:
+          type: string
+          example: AMD-Ryzen-5-5600X-BOX
+        description:
+          type: string
+        categoryId:
+          type: number
+          example: 2
+      required:
+        - id
+        - name
+        - image
+        - price
+        - createdAt
+        - updatedAt
+        - slug
+        - description
+        - categoryId
+    GetItemResponse:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        name:
+          type: string
+          example: AMD Ryzen 5 5600X BOX
+        image:
+          type: string
+          example: 9b77bf06-8e65-4787-b77e-9146a81c4bca.jpg
+        price:
+          type: number
+          example: 15999
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        slug:
+          type: string
+          example: AMD-Ryzen-5-5600X-BOX
+        description:
+          type: string
+        categoryId:
+          type: number
+          example: 2
+      required:
+        - id
+        - name
+        - image
+        - price
+        - createdAt
+        - updatedAt
+        - slug
+        - description
+        - categoryId
+    PropertiesResponse:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+          description: "NOTE: This number refers to ID of record in AdditionalProp table"
+        name:
+          type: string
+          example: CPU Speed
+        value:
+          type: string
+          nullable: true
+          example: 4.6 GHz
+      required:
+        - id
+        - name
+        - value
+    CreateCategoryDto:
+      type: object
+      properties:
+        name:
+          type: string
+        parentId:
+          type: number
+          nullable: true
+        additionalProps:
+          nullable: true
+          type: array
+          items:
+            type: string
+      required:
+        - name
+    CreateCategoryResponse:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 2
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        name:
+          type: string
+          example: Electronics
+        nestingLevel:
+          type: number
+          example: 2
+        parentId:
+          type: number
+          nullable: true
+          example: 1
+      required:
+        - id
+        - createdAt
+        - updatedAt
+        - name
+        - nestingLevel
+    Category:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 2
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        name:
+          type: string
+          example: Electronics
+        nestingLevel:
+          type: number
+          example: 2
+        parentId:
+          type: number
+          nullable: true
+          example: 1
+      required:
+        - id
+        - createdAt
+        - updatedAt
+        - name
+        - nestingLevel
+    GetCategoryTreeResponse:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 2
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        name:
+          type: string
+          example: Electronics
+        nestingLevel:
+          type: number
+          example: 2
+        parentId:
+          type: number
+          nullable: true
+          example: 1
+        childCategories:
+          example:
+            - id: 2
+              createdAt: 2023-07-17T15:56:14.342Z
+              updatedAt: 2023-07-17T15:56:14.342Z
+              name: PC accessories
+              nestingLevel: 2
+              parentId: 1
+              childCategories: []
+          type: array
+          items:
+            $ref: "#/components/schemas/Category"
+      required:
+        - id
+        - createdAt
+        - updatedAt
+        - name
+        - nestingLevel
+        - childCategories
+    GetItemSimplifiedResponse:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        name:
+          type: string
+          example: AMD Ryzen 5 5600X BOX
+        image:
+          type: string
+          example: 9b77bf06-8e65-4787-b77e-9146a81c4bca.jpg
+        price:
+          type: number
+          example: 15999
+      required:
+        - id
+        - name
+        - image
+        - price
+    GetCategoryResponse:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 2
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        name:
+          type: string
+          example: Electronics
+        nestingLevel:
+          type: number
+          example: 2
+        parentId:
+          type: number
+          nullable: true
+          example: 1
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/GetItemSimplifiedResponse"
+      required:
+        - id
+        - createdAt
+        - updatedAt
+        - name
+        - nestingLevel
+        - items
+    AdditionalPropValue:
+      type: object
+      properties:
+        value:
+          type: string
+          example: 4.6 GHz
+        counter:
+          type: number
+          example: 5
+      required:
+        - value
+        - counter
+    GetCategoryPropsResponse:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        name:
+          type: string
+          example: CPU Speed
+        values:
+          type: array
+          items:
+            $ref: "#/components/schemas/AdditionalPropValue"
+      required:
+        - id
+        - name
+        - values
+    CreateCartResponse:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 6
+          description: ID of cart
+      required:
+        - id
+    CartItem:
+      type: object
+      properties:
+        item:
+          $ref: "#/components/schemas/GetItemSimplifiedResponse"
+        counter:
+          type: number
+          example: 2
+      required:
+        - item
+        - counter
+    GetCartResponse:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 6
+        updatedAt:
+          format: date-time
+          type: string
+        userId:
+          type: number
+          example: 2
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItem"
+      required:
+        - id
+        - updatedAt
+        - userId
+        - items
+    AddCartItemDto:
+      type: object
+      properties:
+        itemId:
+          type: number
+          example: 1
+        counter:
+          type: number
+          example: 2
+      required:
+        - itemId
+        - counter
+    AddCartItemResponse:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 6
+        updatedAt:
+          format: date-time
+          type: string
+        userId:
+          type: number
+          example: 2
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItem"
+      required:
+        - id
+        - updatedAt
+        - userId
+        - items
+    UpdateCartItemDto:
+      type: object
+      properties:
+        itemId:
+          type: number
+          example: 1
+        counter:
+          type: number
+          example: 2
+      required:
+        - itemId
+        - counter
+    UpdateCartItemResponse:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 6
+        updatedAt:
+          format: date-time
+          type: string
+        userId:
+          type: number
+          example: 2
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItem"
+      required:
+        - id
+        - updatedAt
+        - userId
+        - items

@@ -4,7 +4,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { AddCartItem, UpdateCartItemDto } from './dto';
+import { AddCartItemDto, UpdateCartItemDto } from './dto';
+import { simplifiedItemSelectObject } from '../common/constants';
 
 @Injectable()
 export class CartService {
@@ -33,12 +34,19 @@ export class CartService {
         id: cartId,
       },
       include: {
-        items: true,
+        items: {
+          select: {
+            item: {
+              select: simplifiedItemSelectObject,
+            },
+            counter: true,
+          },
+        },
       },
     });
   }
 
-  async addItem(cartId: number, dto: AddCartItem) {
+  async addItem(cartId: number, dto: AddCartItemDto) {
     await this.checkItemAndCartExistence(cartId, dto.itemId);
 
     const isItemAlreadyInCart = !!(await this.prismaService.cartItems.findFirst(

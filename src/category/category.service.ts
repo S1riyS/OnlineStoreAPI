@@ -6,6 +6,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateCategoryDto } from './dto';
 import { Prisma } from '@prisma/client';
+import { simplifiedItemSelectObject } from '../common/constants';
 
 @Injectable()
 export class CategoryService {
@@ -66,12 +67,7 @@ export class CategoryService {
       },
       include: {
         items: {
-          select: {
-            id: true,
-            name: true,
-            image: true,
-            price: true,
-          },
+          select: simplifiedItemSelectObject,
         },
       },
     });

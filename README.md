@@ -56,14 +56,14 @@ This is in fact quite simple backend that can satisfy needs of almost any small 
     - [x] Auth
     - [x] Categories
     - [x] Items
-    - [ ] Basket
+    - [x] Cart
     - [ ] Orders
 - [ ] Documentation
     - [x] Users
     - [x] Auth
     - [x] Categories
     - [x] Items
-    - [ ] Basket
+    - [x] Cart
     - [ ] Orders
 - [ ] Deployment
 - [ ] Tests

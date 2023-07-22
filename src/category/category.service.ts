@@ -64,6 +64,16 @@ export class CategoryService {
       where: {
         id: categoryId,
       },
+      include: {
+        items: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+            price: true,
+          },
+        },
+      },
     });
   }
 
@@ -84,8 +94,16 @@ export class CategoryService {
   }
 
   async getTreeById(categoryId: number) {
-    const category = await this.getOneByID(categoryId);
-    return this.generateTree(category.id);
+    const isCategoryExists = !!(await this.prismaService.category.findFirst({
+      where: {
+        id: categoryId,
+      },
+    }));
+    if (!isCategoryExists) {
+      throw new NotFoundException('Category not found');
+    }
+
+    return this.generateTree(categoryId);
   }
 
   async getProperties(categoryId: number) {

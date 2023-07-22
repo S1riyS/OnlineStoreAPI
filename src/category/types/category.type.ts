@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { GetItemResponse } from '../../item/types';
+import { GetItemSimplifiedResponse } from '../../item/types';
 
 class Category {
   @ApiProperty({ example: 2 })
@@ -42,6 +42,6 @@ export class GetCategoryTreeResponse extends Category {
 }
 
 export class GetCategoryResponse extends Category {
-  @ApiProperty({ type: [GetItemResponse] })
-  items: GetItemResponse[];
+  @ApiProperty({ type: [GetItemSimplifiedResponse] })
+  items: GetItemSimplifiedResponse[];
 }

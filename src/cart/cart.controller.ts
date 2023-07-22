@@ -9,7 +9,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { CartService } from './cart.service';
-import { CreateCartItemDto, UpdateCartItemDto } from './dto';
+import { AddCartItemDto, UpdateCartItemDto } from './dto';
 
 @Controller('carts')
 export class CartController {
@@ -32,7 +32,7 @@ export class CartController {
   @Post(':id')
   addItem(
     @Param('id', ParseIntPipe) cartId: number,
-    @Body() dto: CreateCartItemDto,
+    @Body() dto: AddCartItemDto,
   ) {
     return this.cartService.addItem(cartId, dto);
   }

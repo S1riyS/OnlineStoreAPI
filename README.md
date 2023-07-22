@@ -10,7 +10,7 @@
 <h3 align="center">OnlineStoreAPI</h3>
 
   <p align="center">
-    <a href="https://github.com/S1riyS/OnlineStoreAPI">
+    <a href="https://s1riys.github.io/OnlineStoreAPI/">
     <strong>Explore the API docs »</strong></a>
   </p>
 </div>

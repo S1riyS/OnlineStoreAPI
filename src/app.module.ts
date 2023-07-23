@@ -10,6 +10,7 @@ import * as path from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { CartModule } from './cart/cart.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     CategoryModule,
     FilesModule,
     CartModule,
+    OrderModule,
   ],
 })
 export class AppModule {}

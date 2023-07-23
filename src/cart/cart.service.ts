@@ -30,7 +30,7 @@ export class CartService {
   }
 
   async getOne(cartId: number) {
-    const cart = await this.prismaService.cart.findUnique({
+    return this.prismaService.cart.findUnique({
       where: {
         id: cartId,
       },
@@ -45,8 +45,6 @@ export class CartService {
         },
       },
     });
-
-    return cart;
   }
 
   async addItem(cartId: number, dto: AddCartItemDto) {

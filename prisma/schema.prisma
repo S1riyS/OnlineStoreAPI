@@ -19,7 +19,8 @@ model User {
   phoneNumber String?
   hashedRt    String? // Hashed refresh token
 
-  cart Cart?
+  cart   Cart?
+  orders Order[]
 
   @@map("users")
 }
@@ -59,6 +60,7 @@ model Item {
 
   additionalProps ItemAdditionalProps[]
   carts           CartItems[]
+  orders          OrderItems[]
 
   @@map("items")
 }
@@ -72,7 +74,7 @@ model AdditionalProp {
 
   items ItemAdditionalProps[]
 
-  @@map("additional_features")
+  @@map("additional_props")
 }
 
 model ItemAdditionalProps {
@@ -84,6 +86,8 @@ model ItemAdditionalProps {
 
   additionalPropId Int
   additionalProp   AdditionalProp @relation(fields: [additionalPropId], references: [id])
+
+  @@map("item_additional_props")
 }
 
 model Cart {
@@ -109,4 +113,47 @@ model CartItems {
   counter Int // Quantity of items
 
   @@map("cart_items")
+}
+
+model Order {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  userId Int?
+  user   User? @relation(fields: [userId], references: [id])
+
+  details OrderDetails[]
+  items   OrderItems[]
+
+  @@map("orders")
+}
+
+model OrderDetails {
+  id        Int      @id @default(autoincrement())
+  updatedAt DateTime @updatedAt
+
+  orderId Int
+  order   Order @relation(fields: [orderId], references: [id])
+
+  deliveryAddress String
+  name            String
+  email           String
+  phoneNumber     String
+
+  deliveryDate  DateTime
+  deliveryPrice Int
+
+  @@map("order_details")
+}
+
+model OrderItems {
+  id Int @id @default(autoincrement())
+
+  orderId Int
+  order   Order @relation(fields: [orderId], references: [id])
+
+  itemId Int
+  item   Item @relation(fields: [itemId], references: [id])
+
+  @@map("order_items")
 }

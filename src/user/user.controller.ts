@@ -8,11 +8,6 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { AtGuard } from '../common/guards';
-import { CurrentUserId } from '../common/decorators';
-import { UserService } from './user.service';
-import { NotFoundInterceptor } from '../common/interceptors';
-import { EditUserDto } from './dto';
 import {
   ApiBearerAuth,
   ApiNotFoundResponse,
@@ -21,8 +16,13 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { UserEntity } from './user.entity';
+import { UserService } from './user.service';
+import { AtGuard } from '../common/guards';
+import { CurrentUserId } from '../common/decorators';
 import { ApiError } from '../common/types';
+import { NotFoundInterceptor } from '../common/interceptors';
+import { EditUserDto } from './dto';
+import { EditUserResponse, GetUserResponse } from './types';
 
 @Controller('users')
 @ApiTags('Users')
@@ -32,7 +32,7 @@ export class UserController {
   @Get('me')
   @UseGuards(AtGuard)
   @ApiOperation({ summary: 'Get current user' })
-  @ApiOkResponse({ type: UserEntity })
+  @ApiOkResponse({ type: GetUserResponse })
   @ApiUnauthorizedResponse({
     description: 'User is unauthorized',
     type: ApiError,
@@ -47,7 +47,7 @@ export class UserController {
   @Get(':id')
   @UseInterceptors(new NotFoundInterceptor('User not found'))
   @ApiOperation({ summary: 'Get current user by ID' })
-  @ApiOkResponse({ type: UserEntity })
+  @ApiOkResponse({ type: GetUserResponse })
   @ApiNotFoundResponse({ description: 'User was not found', type: ApiError })
   getOne(@Param('id', ParseIntPipe) userId: number) {
     return this.userService.getOneById(userId);
@@ -55,7 +55,7 @@ export class UserController {
 
   @Get()
   @ApiOperation({ summary: 'Get all users' })
-  @ApiOkResponse({ type: [UserEntity] })
+  @ApiOkResponse({ type: [GetUserResponse] })
   getAll() {
     return this.userService.getAll();
   }
@@ -63,7 +63,7 @@ export class UserController {
   @Put('me')
   @UseGuards(AtGuard)
   @ApiOperation({ summary: 'Edit current user' })
-  @ApiOkResponse({ type: UserEntity })
+  @ApiOkResponse({ type: EditUserResponse })
   @ApiUnauthorizedResponse({
     description: 'User is unauthorized',
     type: ApiError,

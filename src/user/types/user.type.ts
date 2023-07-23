@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class UserEntity {
+class User {
   @ApiProperty({ example: 1 })
   id: number;
 
@@ -22,3 +22,7 @@ export class UserEntity {
   @ApiProperty()
   updatedAt: Date;
 }
+
+export class GetUserResponse extends User {}
+
+export class EditUserResponse extends User {}

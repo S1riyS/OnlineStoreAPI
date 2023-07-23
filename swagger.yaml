@@ -11,7 +11,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserEntity"
+                $ref: "#/components/schemas/GetUserResponse"
         "401":
           description: User is unauthorized
           content:
@@ -44,7 +44,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserEntity"
+                $ref: "#/components/schemas/EditUserResponse"
         "401":
           description: User is unauthorized
           content:
@@ -70,7 +70,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserEntity"
+                $ref: "#/components/schemas/GetUserResponse"
         "404":
           description: User was not found
           content:
@@ -91,7 +91,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/UserEntity"
+                  $ref: "#/components/schemas/GetUserResponse"
       tags: *a1
   /auth/local/signup:
     post:
@@ -110,7 +110,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TokensType"
+                $ref: "#/components/schemas/GetTokensResponse"
         "400":
           description: Email is already used or invalid input data
           content:
@@ -136,7 +136,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TokensType"
+                $ref: "#/components/schemas/GetTokensResponse"
         "400":
           description: Invalid username/password supplied or invalid input data
           content:
@@ -172,7 +172,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/TokensType"
+                $ref: "#/components/schemas/GetTokensResponse"
         "401":
           description: User is unauthorized
           content:
@@ -575,7 +575,7 @@ components:
       description: Enter JWT token
       in: header
   schemas:
-    UserEntity:
+    GetUserResponse:
       type: object
       properties:
         id:
@@ -638,6 +638,38 @@ components:
         phoneNumber:
           type: string
           nullable: true
+    EditUserResponse:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+        email:
+          type: string
+          example: test@gmail.com
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        phoneNumber:
+          type: string
+          nullable: true
+          example: "+447911123456"
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+        - id
+        - email
+        - firstName
+        - lastName
+        - createdAt
+        - updatedAt
     CreateUserDto:
       type: object
       properties:
@@ -654,7 +686,7 @@ components:
         - password
         - firstName
         - lastName
-    TokensType:
+    GetTokensResponse:
       type: object
       properties:
         access_token:

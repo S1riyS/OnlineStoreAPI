@@ -46,14 +46,6 @@ export class CartService {
       },
     });
 
-    const now = +new Date();
-    const lastUpdateTime = +cart.updatedAt;
-    const oneHour = 1000 * 60 * 60;
-
-    console.log(new Date(lastUpdateTime));
-    console.log(new Date(now));
-    console.log(now - oneHour, lastUpdateTime);
-
     return cart;
   }
 

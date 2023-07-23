@@ -141,9 +141,6 @@ model OrderDetails {
   email           String
   phoneNumber     String
 
-  deliveryDate  DateTime
-  deliveryPrice Int
-
   @@map("order_details")
 }
 
@@ -153,8 +150,10 @@ model OrderItems {
   orderId Int
   order   Order @relation(fields: [orderId], references: [id])
 
-  itemId Int
-  item   Item @relation(fields: [itemId], references: [id])
+  itemId  Int
+  item    Item @relation(fields: [itemId], references: [id])
+  price   Int
+  counter Int
 
   @@map("order_items")
 }

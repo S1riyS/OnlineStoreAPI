@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto';
-import { Tokens, TokensType } from './types';
+import { GetTokensResponse, Tokens } from './types';
 import { AtGuard, RtGuard } from '../common/guards';
 import { CurrentUser, CurrentUserId } from '../common/decorators';
 import { CreateUserDto } from '../user/dto';
@@ -31,7 +31,7 @@ export class AuthController {
   @Post('local/signup')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Registration of new user' })
-  @ApiCreatedResponse({ type: TokensType })
+  @ApiCreatedResponse({ type: GetTokensResponse })
   @ApiBadRequestResponse({
     description: 'Email is already used or invalid input data',
     type: ApiError,
@@ -43,7 +43,7 @@ export class AuthController {
   @Post('local/login')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Log in to the system' })
-  @ApiOkResponse({ type: TokensType })
+  @ApiOkResponse({ type: GetTokensResponse })
   @ApiBadRequestResponse({
     description: 'Invalid username/password supplied or invalid input data',
     type: ApiError,
@@ -70,7 +70,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(RtGuard)
   @ApiOperation({ summary: 'Returns new access and refresh tokens' })
-  @ApiOkResponse({ type: TokensType })
+  @ApiOkResponse({ type: GetTokensResponse })
   @ApiUnauthorizedResponse({
     description: 'User is unauthorized',
     type: ApiError,

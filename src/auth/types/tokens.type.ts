@@ -5,7 +5,7 @@ export type Tokens = {
   refresh_token: string;
 };
 
-export class TokensType implements Tokens {
+export class GetTokensResponse implements Tokens {
   @ApiProperty({ example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWI...' })
   access_token: string;
 

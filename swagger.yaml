@@ -551,6 +551,77 @@ paths:
               schema:
                 $ref: "#/components/schemas/ApiError"
       tags: *a5
+  /orders:
+    post:
+      operationId: OrderController_create
+      summary: Creates new order
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOrderDto"
+      responses:
+        "201":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateOrderResponse"
+        "404":
+          description: Cart not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  "/orders/{id}":
+    get:
+      operationId: OrderController_getOne
+      summary: Returns order with given ID
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        "200":
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetOrderResponse"
+        "404":
+          description: Order not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+    put:
+      operationId: OrderController_updateStatus
+      summary: Updates status of the order
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateOrderStatusDto"
+      responses:
+        "200":
+          description: Status is updated successfully
+        "404":
+          description: Order not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
 info:
   title: OnlineStoreAPI
   description: Simple backend for online stores
@@ -1133,3 +1204,127 @@ components:
         - updatedAt
         - userId
         - items
+    OrderDetailsDto:
+      type: object
+      properties:
+        deliveryAddress:
+          type: string
+          example: Moscow, Lenina street 123A
+        name:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          example: test@mail.ru
+        phoneNumber:
+          type: string
+          example: "+447911123456"
+      required:
+        - deliveryAddress
+        - name
+        - email
+        - phoneNumber
+    CreateOrderDto:
+      type: object
+      properties:
+        cartId:
+          type: number
+          example: 1
+        details:
+          $ref: "#/components/schemas/OrderDetailsDto"
+      required:
+        - cartId
+        - details
+    CreateOrderResponse:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 2
+      required:
+        - id
+    OrderDetails:
+      type: object
+      properties:
+        deliveryAddress:
+          type: string
+          example: Moscow, Lenina street 123A
+        name:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          example: test@mail.ru
+        phoneNumber:
+          type: string
+          example: "+447911123456"
+        id:
+          type: number
+          example: 2
+        updatedAt:
+          format: date-time
+          type: string
+      required:
+        - deliveryAddress
+        - name
+        - email
+        - phoneNumber
+        - id
+        - updatedAt
+    OrderItem:
+      type: object
+      properties:
+        item:
+          $ref: "#/components/schemas/GetItemSimplifiedResponse"
+        counter:
+          type: number
+          example: 2
+      required:
+        - item
+        - counter
+    GetOrderResponse:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 2
+        createdAt:
+          format: date-time
+          type: string
+        userId:
+          type: number
+          example: 1
+        status:
+          type: string
+          enum:
+            - BEING_PROCESSED
+            - IS_CANCELLED
+            - BEING_DELIVERED
+            - IS_RECEIVED
+          example: BEING_DELIVERED
+        details:
+          $ref: "#/components/schemas/OrderDetails"
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderItem"
+      required:
+        - id
+        - createdAt
+        - userId
+        - status
+        - details
+        - items
+    UpdateOrderStatusDto:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - BEING_PROCESSED
+            - IS_CANCELLED
+            - BEING_DELIVERED
+            - IS_RECEIVED
+          example: BEING_DELIVERED
+      required:
+        - status

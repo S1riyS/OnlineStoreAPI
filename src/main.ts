@@ -5,6 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { SecuritySchemeObject } from '@nestjs/swagger/dist/interfaces/open-api-spec.interface';
 import { stringify } from 'yaml';
 import * as fs from 'fs';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -23,22 +24,26 @@ async function bootstrap() {
     in: 'header',
   };
 
-  // Swagger configuration
-  const swaggerConfig = new DocumentBuilder()
-    .setTitle('OnlineStoreAPI')
-    .setDescription('Simple backend for online stores')
-    .setVersion('1.0.0')
-    .addBearerAuth(JWTOptionsObject, 'JWT-auth')
-    .addBearerAuth(JWTOptionsObject, 'JWT-refresh')
-    .build();
+  const configService = app.get(ConfigService);
 
-  const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('/api/docs', app, document, {
-    customSiteTitle: 'OnlineStoreAPI documentation',
-  });
+  if (configService.get('NODE_ENV') == 'development') {
+    // Swagger configuration
+    const swaggerConfig = new DocumentBuilder()
+      .setTitle('OnlineStoreAPI')
+      .setDescription('Simple backend for online stores')
+      .setVersion('1.0.0')
+      .addBearerAuth(JWTOptionsObject, 'JWT-auth')
+      .addBearerAuth(JWTOptionsObject, 'JWT-refresh')
+      .build();
 
-  const yamlString: string = stringify(document, {});
-  fs.writeFileSync('./swagger.yaml', yamlString);
+    const document = SwaggerModule.createDocument(app, swaggerConfig);
+    SwaggerModule.setup('/api/docs', app, document, {
+      customSiteTitle: 'OnlineStoreAPI documentation',
+    });
+
+    const yamlString: string = stringify(document, {});
+    fs.writeFileSync('./swagger.yaml', yamlString);
+  }
 
   await app.listen(3000);
 }

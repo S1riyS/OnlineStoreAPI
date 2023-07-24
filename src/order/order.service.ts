@@ -88,13 +88,17 @@ export class OrderService {
   }
 
   async updateStatus(orderId: number, dto: UpdateOrderStatusDto) {
-    await this.prismaService.order.update({
-      where: {
-        id: orderId,
-      },
-      data: {
-        status: dto.status,
-      },
-    });
+    await this.prismaService.order
+      .update({
+        where: {
+          id: orderId,
+        },
+        data: {
+          status: dto.status,
+        },
+      })
+      .catch(() => {
+        throw new NotFoundException('Cart not found');
+      });
   }
 }

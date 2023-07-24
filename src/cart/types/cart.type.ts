@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GetItemSimplifiedResponse } from '../../item/types';
 
-class CartItem {
+export class CartItem {
   @ApiProperty()
   item: GetItemSimplifiedResponse;
 

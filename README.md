@@ -51,22 +51,21 @@ This is in fact quite simple backend that can satisfy needs of almost any small 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## 🗺️ Roadmap
-- [ ] API endpoints
+- [x] API endpoints
     - [x] Users
     - [x] Auth
     - [x] Categories
     - [x] Items
     - [x] Cart
-    - [ ] Orders
-- [ ] Documentation
+    - [x] Orders
+- [x] Documentation
     - [x] Users
     - [x] Auth
     - [x] Categories
     - [x] Items
     - [x] Cart
-    - [ ] Orders
+    - [x] Orders
 - [ ] Deployment
-- [ ] Tests
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

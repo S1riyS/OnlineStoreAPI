@@ -45,7 +45,8 @@ async function bootstrap() {
     fs.writeFileSync('./swagger.yaml', yamlString);
   }
 
-  await app.listen(3000);
+  const port = configService.get('PORT') || 3000;
+  await app.listen(port);
 }
 
 bootstrap();

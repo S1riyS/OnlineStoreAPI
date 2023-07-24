@@ -65,7 +65,7 @@ This is in fact quite simple backend that can satisfy needs of almost any small 
     - [x] Items
     - [x] Cart
     - [x] Orders
-- [ ] Deployment
+- [ ] Deployment (Vercel)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

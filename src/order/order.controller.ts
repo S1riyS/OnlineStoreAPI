@@ -17,12 +17,14 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiTags,
 } from '@nestjs/swagger';
 import { CreateOrderResponse, GetOrderResponse } from './types';
 import { ApiError } from '../common/types';
 import { NotFoundInterceptor } from '../common/interceptors';
 
 @Controller('orders')
+@ApiTags('Orders')
 export class OrderController {
   constructor(private orderService: OrderService) {}
 

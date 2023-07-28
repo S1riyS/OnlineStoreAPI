@@ -575,6 +575,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiError"
+      tags: &a6
+        - Orders
   "/orders/{id}":
     get:
       operationId: OrderController_getOne
@@ -598,6 +600,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiError"
+      tags: *a6
     put:
       operationId: OrderController_updateStatus
       summary: Updates status of the order
@@ -622,6 +625,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiError"
+      tags: *a6
 info:
   title: OnlineStoreAPI
   description: Simple backend for online stores
